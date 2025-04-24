@@ -53,7 +53,7 @@ export default function WorkSpaceHeader() {
           <div className="flex items-center gap-2 ">
             <Sidebar />
             <Link href="/" className="lg:h-auto  flex items-center">
-              <Image src="/images/Logo.svg" alt="logo" width={50} height={50} />
+              <Image src="/images/logo.svg" alt="logo" width={50} height={50} />
             </Link>
           </div>
           <HeaderNav />
