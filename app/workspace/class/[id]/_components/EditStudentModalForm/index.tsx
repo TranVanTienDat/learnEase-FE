@@ -53,11 +53,6 @@ export default function EditStudentModalForm({
   const tCommon = useTranslations("common");
   const tToast = useTranslations("toastmessage");
   const t = useTranslations("students");
-  const { data } = useGetImages();
-  const images = [
-    ...(data?.payload.data.boys || []),
-    ...(data?.payload.data.girls || []),
-  ];
   const { toast } = useToast();
   const router = useRouter();
   const [avatar, setAvatar] = useState<{ id: string; url: string } | undefined>(
@@ -180,13 +175,8 @@ export default function EditStudentModalForm({
     }
   };
 
-  useEffect(() => {
-    setAvatar(initValue ? initValue.avatar : images[0]);
-  }, [data]);
-
   return (
     <>
-      <ImagePopover image={avatar} onChangeImage={setAvatar} list={images} />
       <Form {...form}>
         <form
           id="StudentForm"

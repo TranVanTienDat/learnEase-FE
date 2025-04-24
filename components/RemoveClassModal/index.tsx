@@ -28,7 +28,7 @@ export default function RemoveClassModal({
   description?: string;
   isPermission?: boolean;
   handleOpenComfirm?: () => void;
-  icon?: string;
+  icon?: any;
 }) {
   const tCommon = useTranslations("common");
   const [open, setOpen] = useState(false);
@@ -51,11 +51,7 @@ export default function RemoveClassModal({
     >
       <DialogTrigger asChild>
         {icon ? (
-          <img
-            src="/images/icons/trash.svg"
-            className="cursor-pointer"
-            alt="delete"
-          />
+          icon
         ) : (
           <Button
             className={clsx(

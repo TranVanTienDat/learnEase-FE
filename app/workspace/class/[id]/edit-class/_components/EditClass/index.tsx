@@ -89,117 +89,6 @@ const TeacherItem = ({
   );
 };
 
-const AssistantTeachers = ({
-  teachers,
-  onChange = () => {},
-}: {
-  teachers: TeachersType;
-  onChange?: (teachers: TeachersType) => void;
-}) => {
-  const t = useTranslations("class");
-  const tToast = useTranslations("toastmessage");
-  const { toast } = useToast();
-  const mutation = useGetTeachers();
-  const handleSearch = async () => {
-    if (mutation.isPending) return;
-    const value = refInputSearch.current?.value || "";
-    const searchTeachers = await mutation.mutateAsync(value);
-    const teachersSet = new Set(teachers?.map((item) => item.uid));
-    const searchTeachersFilter = searchTeachers.find(
-      (x: TeacherType) => !teachersSet.has(x.uid)
-    );
-    if (searchTeachers.length > 0) {
-      if (searchTeachersFilter) {
-        handleSelectTeacher(searchTeachersFilter);
-      } else {
-        toast({
-          variant: "destructive",
-          title: tToast("teacherSelected"),
-        });
-      }
-    } else {
-      toast({
-        variant: "destructive",
-        title: tToast("notFindTeacher"),
-        description: tToast("pleaseCheckCode"),
-      });
-    }
-  };
-  const handleRemove = (uid: string) => {
-    const newTeachers = teachers?.filter((x) => x.uid !== uid);
-    onChange(newTeachers);
-  };
-  const refInputModal = useRef<HTMLDivElement>(null);
-  const refInputSearch = useRef<HTMLInputElement>(null);
-  const handleSelectTeacher = (teacher: TeacherType) => {
-    if (teachers && teachers?.length < 5) {
-      const newTeachers = teachers ? [...teachers, teacher] : [teacher];
-      onChange(newTeachers);
-    } else {
-      toast({
-        variant: "destructive",
-        title: tToast("only5Teacher"),
-      });
-    }
-  };
-  return (
-    <div className="flex flex-col gap-2">
-      <label>
-        {t("coTeacher")}
-        <span className="text-quaternary text-sm"> {t("maxFiveTeacher")}</span>
-      </label>
-      <div className="border rounded-md p-3 sm:min-h-[430px]">
-        <div className="relative" ref={refInputModal}>
-          <div>
-            <Input
-              className="text-[22px] font-semibold py-6 placeholder:text-[16px] placeholder:text-[#B5B7C0] placeholder:font-normal"
-              type="text"
-              placeholder={t("coTeacherCode")}
-              ref={refInputSearch}
-            />
-            {mutation.isPending ? (
-              <FontAwesomeIcon
-                className="absolute right-3 top-1/2 -translate-y-1/2"
-                icon={faSpinner}
-              />
-            ) : (
-              <img
-                onClick={handleSearch}
-                src="/images/add.svg"
-                alt="add"
-                className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2"
-              />
-            )}
-          </div>
-        </div>
-        <div className="mt-3">
-          {!!teachers?.length ? (
-            teachers?.map((item: TeacherType) => (
-              <TeacherItem
-                key={uuidv4()}
-                {...item}
-                onRemove={() => {
-                  if (item.uid) handleRemove(item.uid);
-                }}
-              />
-            ))
-          ) : (
-            <div className="flex items-center justify-center flex-col py-20 pb-[152px] gap-3">
-              <Image
-                src="/images/empty-data.svg"
-                width={100}
-                height={100}
-                alt=""
-              />
-              <p>{t("noCoTeacher")}</p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export default function EditClass({ data }: any) {
   const tCommon = useTranslations("common");
   const tToast = useTranslations("toastmessage");
@@ -344,7 +233,7 @@ export default function EditClass({ data }: any) {
 
   return (
     <div className="pb-10">
-      <div className="p-5 border-2 border-primary rounded-[20px] space-y-8">
+      <div className="space-y-6">
         <div>
           <div className="flex gap-4 items-center my-3">
             <BackTitle>
@@ -365,56 +254,24 @@ export default function EditClass({ data }: any) {
             <InputItem
               label={`${t(
                 "className"
-              )}<span class="text-[#F4673D] mb-1 text-sm"> * ${t(
-                "shortNameExample"
-              )}</span>`}
+              )}<span class="text-[#F4673D] mb-1 text-sm"> * (Tên ngắn gọn)</span>`}
               defaultValue={data?.name}
               ref={nameRef}
               placeholder={t("className")}
             />
-            <AssistantTeachers
-              teachers={teachers}
-              onChange={handleChangeTeacher}
-            />
-            {/* <div className="flex flex-col gap-2">
-              <label className="">Xem Điểm và Nhận xét</label>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="publicDailyRecords"
-                  checked={publicDailyRecords}
-                  onCheckedChange={() =>
-                    setPublicDailyRecords(!publicDailyRecords)
-                  }
-                />
-                <label
-                  htmlFor="publicDailyRecords"
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Cho phép xem Điểm và Nhận xét mà không cần MÃ
-                </label>
-              </div>
-            </div> */}
           </div>
           <div className="space-y-6">
             <InputItem
               label={`${t(
                 "fullClassName"
-              )} <span class="text-[#F4673D] mb-1 text-sm">${t(
-                "shortFullNameExample"
-              )}</span>`}
+              )} <span class="text-[#F4673D] mb-1 text-sm">* (Tên đầy đủ)</span>`}
               defaultValue={data?.fullName}
               ref={fullNameRef}
               placeholder={t("fullClassName")}
             />
-            <Schedules list={schedules} onChange={handleChangeSchedules} />
           </div>
         </div>
-        <EvaluationTabs
-          minusEvaluations={minusEvaluations}
-          extraEvaluations={extraEvaluations}
-          onChangeMinus={setMinusEvaluations}
-          onChangeExtra={setExtraEvaluations}
-        />
+        <Schedules list={schedules} onChange={handleChangeSchedules} />
         <div className="flex gap-6 mt-10">
           <Button
             className="rounded-full p-6 px-10 min-w-[180px] font-semibold"

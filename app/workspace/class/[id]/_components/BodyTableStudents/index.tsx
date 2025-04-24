@@ -9,6 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import EditStudentModal from "@/app/workspace/class/[id]/_components/EditStudentModal";
 import RemoveClassModal from "@/components/RemoveClassModal";
 import { useTranslations } from "next-intl";
+import { LucideTrash2, Pencil, TrashIcon, UserRoundPlus } from "lucide-react";
 
 export default function BodyTableStudents({
   students,
@@ -106,12 +107,12 @@ export default function BodyTableStudents({
                   key={item.id}
                   className="text-md [&:not(:last-child)]:border-b hover:bg-[#E8F4E6]"
                 >
-                  <td className="p-2 px-3 text-center">
+                  <td className="p-1 px-3 text-center">
                     <p>{index + 1}</p>
                   </td>
-                  <td className="p-2 px-3 border-l">
+                  <td className="p-2 px-3">
                     <div className="flex items-center gap-[10px]">
-                      <div className="h-[60px] w-[60px]">
+                      <div className="h-[32px] w-[32px]">
                         <Image
                           src={convertImageUrl(item?.avatar?.url)}
                           alt="avatar"
@@ -120,15 +121,13 @@ export default function BodyTableStudents({
                           className="rounded-full w-full h-full mx-auto group-hover:scale-105 transition-all"
                         />
                       </div>
-                      <p>{item.fullName}</p>
+                      <div className="flex flex-col">
+                        <p className="text-md font-semibold">{item.fullName}</p>
+                        <p className="text-xs">{item.nickname}</p>
+                      </div>
                     </div>
                   </td>
-                  <td className="p-2 px-3 border-l">
-                    <p className="max-w-[200px] line-clamp-1 mx-auto cursor-pointer">
-                      {item.nickname}
-                    </p>
-                  </td>
-                  <td className="p-2 px-3 border-l font-bold ">
+                  <td className="p-1 px-3  font-semibold ">
                     <div className="flex items-center justify-between">
                       <p className="text-primary">+ {item.point.extraPoint}</p>
                       <p className="text-quaternary">
@@ -136,25 +135,25 @@ export default function BodyTableStudents({
                       </p>
                     </div>
                   </td>
-                  <td className="p-2 px-3 border-l">
+                  <td className="p-1 px-3 ">
                     <p>{item.gender ? tCommon("male") : tCommon("female")}</p>
                   </td>
-                  <td className="p-2 px-3 border-l">
+                  <td className="p-1 px-3 ">
                     <p className="cursor-pointer">{item.group}</p>
                   </td>
-                  <td className="p-2 px-3 border-l">
+                  <td className="p-1 px-3">
                     <p className="cursor-pointer">{item.parentPhone}</p>
                   </td>
-                  <td className="p-2 px-3 border-l">
+                  <td className="p-1 px-3">
                     <p className="cursor-pointer">{item.code}</p>
                   </td>
-                  <td className="p-2 px-3 border-l">
-                    <div className="flex gap-3 justify-between">
-                      <img
-                        src="/images/icons/edit.svg"
+                  <td className="p-1 px-3">
+                    <div className="flex gap-4 justify-start">
+                      <Pencil
+                        width={18}
+                        hanging={18}
                         className="cursor-pointer"
                         onClick={() => handleEdit(item)}
-                        alt="edit"
                       />
                       <RemoveClassModal
                         onRemove={() => handleRemoveStudent(item.id.toString())}
@@ -162,7 +161,13 @@ export default function BodyTableStudents({
                         handleOpenComfirm={() => handleComfirm()}
                         title={tCommon("titleDeleteStudent")}
                         description={tCommon("desDeleteStudent")}
-                        icon="/images/icons/trash.svg"
+                        icon={
+                          <LucideTrash2
+                            className="cursor-pointer"
+                            width={18}
+                            hanging={18}
+                          />
+                        }
                       />
                     </div>
                   </td>

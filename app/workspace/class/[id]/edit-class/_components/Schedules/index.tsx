@@ -112,36 +112,33 @@ export default function Schedules({
     <>
       <div className="flex flex-col gap-2">
         <label>{t("timeTable")}</label>
-        <div className="border rounded-md p-3 py-1 divide-y">
+        <div className="border rounded-md p-3 py-1 grid md:grid-cols-2 gap-x-6">
           {Object.keys(heads).map((day) => {
             const { text, value } = heads[day as keyof typeof heads];
             const item = list.find((item) => item.day === value);
             return (
               <div
-                className="flex items-center py-[9.3px] gap-5 h-[60px]"
+                className="flex items-center py-[9.3px] gap-5 h-[60px] [&:not(:last-child)]:border-b"
                 key={day}
               >
-                <p className="w-[100px] font-bold h-[36.5px] flex items-center border-r">
+                <p className="w-[100px] font-bold h-[36.5px] flex items-center">
                   {t(text)}
                 </p>
                 {item ? (
-                  <div className="flex justify-between gap-3 flex-1">
+                  <div className="flex justify-end gap-4 flex-1 pr-2">
                     <div
                       className="flex border p-2 rounded-lg px-3 border-[#0305d9] cursor-pointer w-[110px] text-sm text-center justify-center"
                       onClick={() => handleChange(item, "update")}
                     >
                       {formatTime(item.startTime)} - {formatTime(item.endTime)}
                     </div>
-                    <button
-                      className="ml-auto"
-                      onClick={() => handleRemove(item)}
-                    >
+                    <button onClick={() => handleRemove(item)}>
                       <img src="/images/remove.svg" alt="" />
                     </button>
                   </div>
                 ) : (
                   <button
-                    className="ml-auto"
+                    className="ml-auto pr-2"
                     onClick={() =>
                       handleChange(
                         {
