@@ -49,10 +49,9 @@ interface IScheduleDaily {
 const ScheduleTable = () => {
   const { data: bodySchedule } = useGetCalendar();
   const t = useTranslations("class");
-
   return (
     <>
-      {bodySchedule && !Object.keys(bodySchedule) && (
+      {bodySchedule && !!Object.keys(bodySchedule).length && (
         <div className="border rounded-[30px] overflow-auto bg-primary">
           <table className="w-full rounded-t-xl min-w-[800px]">
             <thead className="text-white">
