@@ -142,32 +142,32 @@ export default function TableStudy({
               {students.map((x, index) => {
                 const Element: ReactNode = (
                   <>
-                    <td className="border-l">
+                    <td>
                       <div className={clsx(className, "font-bold")}>
                         {x?.grades?.[0]?.score}
                       </div>
                     </td>
-                    <td className="border-l">
+                    <td>
                       <div className={clsx(className, "font-bold")}>
                         {x?.grades?.[1]?.score}
                       </div>
                     </td>
-                    <td className="border-l">
+                    <td>
                       <div className={clsx(className, "font-bold")}>
                         {x?.grades?.[2]?.score}
                       </div>
                     </td>
-                    <td className="border-l">
+                    <td>
                       <div className={clsx(className, "font-bold")}>
                         {x.avgScore}
                       </div>
                     </td>
-                    <td className="border-l">
+                    <td>
                       <div className={clsx(className, "font-bold")}>
                         {t(convertAcademicRating(x.academicPerformance))}
                       </div>
                     </td>
-                    <td className="border-l">
+                    <td>
                       <div className={clsx(className, "font-bold")}>
                         {t(convertConduct(x.conduct))}
                       </div>

@@ -21,7 +21,7 @@ const StudentItem = ({ stt, nickname, code, Element }: StatisticalType) => {
       <td>
         <div className={clsx(className)}>{stt}</div>
       </td>
-      <td className="border-l p-3 pr-6 relative">
+      <td className=" p-1 pr-6 relative">
         <div className={clsx(className)}>
           <div className="w-full">
             <p className="font-bold">{nickname}</p>

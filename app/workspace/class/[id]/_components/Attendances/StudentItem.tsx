@@ -138,7 +138,7 @@ const StudentItem = ({
         <td>
           <div className={clsx(className)}>{stt}</div>
         </td>
-        <td className="border-l p-3 pr-6 relative">
+        <td className=" p-1 pr-6 relative">
           <div className={clsx(className)}>
             <div className="space-y-1 w-full">
               <p
@@ -152,11 +152,8 @@ const StudentItem = ({
               )} ${code}`}</p>
             </div>
           </div>
-          {rank && ranks[rank] && (
-            <TriangleRank text={ranks[rank].text} color={ranks[rank].color} />
-          )}
         </td>
-        <td className="border-l">
+        <td className="">
           <div className={clsx("", className)}>
             <SwitchAttendance
               status={statusRender()}
@@ -165,19 +162,19 @@ const StudentItem = ({
             />
           </div>
         </td>
-        <td className="border-l">
+        <td className="">
           <Point extra={point.extraPoint} minus={point.minusPoint} />
         </td>
-        <td className="border-l">
+        <td className="">
           <Point extra={monthPoint.extra} minus={monthPoint.minus} />
         </td>
-        <td className="border-l">
+        <td className="">
           <Point extra={weekPoint.extra} minus={weekPoint.minus} />
         </td>
-        <td className="border-l">
+        <td className="">
           <Point extra={dayPoint.extra} minus={dayPoint.minus} />
         </td>
-        <td className="border-l">
+        <td className="">
           <div
             className="flex gap-2 items-center p-2 px-3 cursor-pointer"
             onClick={() => handleToggle(dailyRecord?.comment)}
@@ -189,7 +186,7 @@ const StudentItem = ({
             )}
           </div>
         </td>
-        <td className="border-l text-center">
+        <td className=" text-center">
           <Button
             variant={"link"}
             className="p-0 font-normal text-md flex gap-1 justify-center w-full"

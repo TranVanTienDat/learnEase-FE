@@ -41,36 +41,31 @@ export default function StatisticalPoints({
   };
 
   return (
-    <>
-      <div className="flex justify-between items-center">
-        <NavigationLinkList params={params} searchParams={searchParams} />
+    <div className="py-2 border-t">
+      <div className="relative">
+        {!!seasons?.length && (
+          <FilterTerm
+            list={seasons.map((x) => ({
+              ...x,
+              id: x.id.toString(),
+            }))}
+            onChange={handleChangeFilterTerm}
+            initValue={seasonParams.toString()}
+            className="bottom-full top-auto  mb-6"
+          />
+        )}
+        {!!subjects?.length && (
+          <StatisticalSubjectsTab
+            subjects={subjects}
+            students={students}
+            grandingBreakdowns={grandingBreakdowns}
+            points={points}
+            key={seasonParams}
+            onChangeConduct={() => {}}
+            onChangeSubject={handleChangeSubject}
+          />
+        )}
       </div>
-      <div className="py-4 mt-4 border-t">
-        <div className="relative">
-          {!!seasons?.length && (
-            <FilterTerm
-              list={seasons.map((x) => ({
-                ...x,
-                id: x.id.toString(),
-              }))}
-              onChange={handleChangeFilterTerm}
-              initValue={seasonParams.toString()}
-              className="bottom-full top-auto  mb-6"
-            />
-          )}
-          {!!subjects?.length && (
-            <StatisticalSubjectsTab
-              subjects={subjects}
-              students={students}
-              grandingBreakdowns={grandingBreakdowns}
-              points={points}
-              key={seasonParams}
-              onChangeConduct={() => {}}
-              onChangeSubject={handleChangeSubject}
-            />
-          )}
-        </div>
-      </div>
-    </>
+    </div>
   );
 }

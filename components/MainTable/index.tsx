@@ -74,10 +74,7 @@ export default function MainTable({
           {tBody.map((item, index) => (
             <tr className="[&:not(:last-child)]:border-b" key={index}>
               {allKeys.map((key) => (
-                <td
-                  className="[&:not(:first-child)]:border-l p-3 relative"
-                  key={key}
-                >
+                <td className="p-1 relative" key={key}>
                   {item[key] !== undefined ? item[key] : ""}
                 </td>
               ))}

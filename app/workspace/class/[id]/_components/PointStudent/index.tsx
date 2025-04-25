@@ -131,7 +131,7 @@ export default function TablePoint({
               {students.map((x, index) => {
                 const Element = x.reports.map((point, index) => {
                   return (
-                    <td key={index} className="border-l">
+                    <td key={index}>
                       <Point
                         extraPoint={point.extraPoint}
                         minusPoint={point.minusPoint}

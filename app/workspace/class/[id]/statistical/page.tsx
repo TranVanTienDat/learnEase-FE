@@ -26,66 +26,28 @@ export default async function Page({
   let seasonParams;
   let subjects;
   const date = customFormatDate();
-  if (searchParams.key === "point") {
-    data = await studentRequest.getPointClass(
-      params.id,
 
-      typeof searchParams?.month === "string"
-        ? searchParams?.month
-        : date.slice(0, 7)
-    );
-  } else if (searchParams.key === "study") {
-    students = await studentRequest.getList({
-      "filters[class][id]": params.id,
-      "pagination[pageSize]=": MAX_NUMBER_STUDENTS_PER_CLASS,
-    });
-    classDetail = await classRequest.getDetail(params.id, {
-      "pagination[pageSize]=": MAX_NUMBER_STUDENTS_PER_CLASS,
-      "[populate][subjects]": true,
-      "[populate][grandingBreakdowns][populate][grandingBreakdown]": true,
-      "[populate][grandingBreakdowns][populate][subject]": true,
-      "[populate][seasons]": true,
-    });
+  students = await studentRequest.getList({
+    "filters[class][id]": params.id,
+    "pagination[pageSize]=": MAX_NUMBER_STUDENTS_PER_CLASS,
+  });
+  classDetail = await classRequest.getDetail(params.id, {
+    "pagination[pageSize]=": MAX_NUMBER_STUDENTS_PER_CLASS,
+    "[populate][subjects]": true,
+    "[populate][grandingBreakdowns][populate][grandingBreakdown]": true,
+    "[populate][grandingBreakdowns][populate][subject]": true,
+    "[populate][seasons]": true,
+  });
 
-    seasonParams =
-      (searchParams?.season as string) ||
-      (classDetail?.seasons?.[0]?.id as string);
+  seasonParams =
+    (searchParams?.season as string) ||
+    (classDetail?.seasons?.[0]?.id as string);
 
-    points = await pointsRequest.getList(params.id, seasonParams);
-    subjects = classDetail?.subjects?.map((x) => ({
-      label: x.name,
-      value: x.id.toString(),
-    }));
-  }
-
-  const keys: { [key: string]: JSX.Element } = {
-    attendance: <Attendance params={params} searchParams={searchParams} />,
-    point: data ? (
-      <Point
-        params={params}
-        students={data.payload.data}
-        searchParams={searchParams}
-        month={date.slice(0, 7)}
-        locale={locale}
-      />
-    ) : (
-      <></>
-    ),
-    study: classDetail ? (
-      <StatisticalPoints
-        points={points?.payload?.data || []}
-        subjects={subjects || []}
-        grandingBreakdowns={classDetail?.grandingBreakdowns || []}
-        seasonParams={seasonParams as string}
-        students={students || []}
-        seasons={classDetail?.seasons}
-        params={params}
-        searchParams={searchParams}
-      />
-    ) : (
-      <></>
-    ),
-  };
+  points = await pointsRequest.getList(params.id, seasonParams);
+  subjects = classDetail?.subjects?.map((x) => ({
+    label: x.name,
+    value: x.id.toString(),
+  }));
 
   return (
     <div className="container space-y-5 pb-5  min-h-[calc(100vh-310px)]">
@@ -94,7 +56,18 @@ export default async function Page({
           {tCommon("statistical")}
         </h1>
       </BackTitle>
-      <div>{keys[`${searchParams.key}`]}</div>
+      {classDetail && (
+        <StatisticalPoints
+          points={points?.payload?.data || []}
+          subjects={subjects || []}
+          grandingBreakdowns={classDetail?.grandingBreakdowns || []}
+          seasonParams={seasonParams as string}
+          students={students || []}
+          seasons={classDetail?.seasons}
+          params={params}
+          searchParams={searchParams}
+        />
+      )}
     </div>
   );
 }

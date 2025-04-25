@@ -49,42 +49,46 @@ interface IScheduleDaily {
 const ScheduleTable = () => {
   const { data: bodySchedule } = useGetCalendar();
   const t = useTranslations("class");
+
   return (
-    <div className="border rounded-[30px] overflow-auto bg-primary">
-      <table className="w-full rounded-t-xl min-w-[800px]">
-        <thead className="text-white">
-          <tr className="">
-            {headSchedule.map((item) => (
-              <th className="p-2" key={item}>
-                {t(item)}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="bg-white">
-          <tr>
-            {bodySchedule &&
-              Object.keys(bodySchedule as IScheduleDaily).map((item) => (
-                <td className="border p-2 align-top" key={item}>
-                  <div className="space-y-2">
-                    {(bodySchedule as IScheduleDaily)[item].map((cl) => (
-                      <div
-                        className="rounded-[30px] border-[3px] border-secondary text-center p-2"
-                        key={uuidv4()}
-                      >
-                        <p className="font-semibold text-lg">
-                          {cl.classInfo.name}
-                        </p>
-                        <p className="text-center">{`${cl.startTime} - ${cl.endTime}`}</p>
-                      </div>
-                    ))}
-                  </div>
-                </td>
-              ))}
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <>
+      {bodySchedule && !Object.keys(bodySchedule) && (
+        <div className="border rounded-[30px] overflow-auto bg-primary">
+          <table className="w-full rounded-t-xl min-w-[800px]">
+            <thead className="text-white">
+              <tr className="">
+                {headSchedule.map((item) => (
+                  <th className="p-2" key={item}>
+                    {t(item)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white">
+              <tr>
+                {Object.keys(bodySchedule as IScheduleDaily).map((item) => (
+                  <td className="border p-2 align-top" key={item}>
+                    <div className="space-y-2">
+                      {(bodySchedule as IScheduleDaily)[item].map((cl) => (
+                        <div
+                          className="rounded-[30px] border-[3px] border-secondary text-center p-2"
+                          key={uuidv4()}
+                        >
+                          <p className="font-semibold text-lg">
+                            {cl.classInfo.name}
+                          </p>
+                          <p className="text-center">{`${cl.startTime} - ${cl.endTime}`}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
   );
 };
 
@@ -186,21 +190,6 @@ const ClassItem = ({
           <p className=" text-xl font-bold truncate text-primary">{fullName}</p>
         </div>
         <ul className="space-y-3 text-[15px]">
-          {allowViewStudent && (
-            <li>
-              <Link
-                href={`/workspace/class/${id}/students`}
-                className="flex items-center gap-3 group"
-              >
-                <span className="rounded-[8px] flex items-center justify-center">
-                  <Users className="text-[#0E0D25]" size={20} />
-                </span>
-                <span className="text-[#0E0D25] group-hover:text-primary font-bold">
-                  Danh sách học sinh
-                </span>
-              </Link>
-            </li>
-          )}
           <li>
             <Link
               href={`/workspace/class/${id}/attendance`}
@@ -216,7 +205,7 @@ const ClassItem = ({
           </li>
           <li>
             <Link
-              href={`/workspace/class/${id}/statistical?key=point`}
+              href={`/workspace/class/${id}/statistical?key=study`}
               className="flex items-center gap-3 group"
             >
               <span className=" rounded-[8px] flex items-center justify-center">

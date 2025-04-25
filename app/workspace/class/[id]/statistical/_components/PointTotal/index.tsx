@@ -71,8 +71,8 @@ export default function PointTotal({
           stt: <p className="text-center">{index + 1}</p>,
           name: (
             <div className="space-y-1 w-full">
-              <p className="font-bold">{item.fullName}</p>
-              <p className="text-[#5e6477]">{`${tCommon("codeLabel")} ${
+              <p className="font-bold text-md">{item.fullName}</p>
+              <p className="text-[#5e6477] text-sm">{`${tCommon("codeLabel")} ${
                 item.code
               }`}</p>
             </div>
@@ -113,7 +113,7 @@ export default function PointTotal({
       average: <p className="text-center">{+totalAbility}</p>,
       ability: (
         <p className="text-center">
-          {totalAbility === "0.0" ? '-' : t(convertAbility(+totalAbility))}
+          {totalAbility === "0.0" ? "-" : t(convertAbility(+totalAbility))}
         </p>
       ),
       conduct: (
