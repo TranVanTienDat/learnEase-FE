@@ -1,0 +1,44 @@
+"use client";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
+import { ChatMessage, useChatStore } from "@/stores/chat";
+
+export default function MessageList() {
+  const messages = useChatStore((state) => state.getSession().messages);
+
+  return (
+    <div className="mb-[84px] h-[calc(100vh-140px)] overflow-y-scroll table-wrapper px-4">
+      <div className="max-w-[768px] mx-auto py-2 flex flex-col gap-2 ">
+        {messages.map((msg) => (
+          <Message key={msg.id} {...msg} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const Message = (msg: ChatMessage) => {
+  const { content, role } = msg;
+  const isUser = role === "user";
+
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-3 pb-2",
+        isUser ? "flex-row-reverse" : "flex-row"
+      )}
+    >
+      <Avatar className="rounded-[50%] w-[40px] h-[40px] bg-[#d5f5f6] flex justify-center items-end">
+        <AvatarImage
+          className="rounded-[50%] w-[30px] h-[30px]"
+          src={!isUser ? "/images/assistant.png" : "/images/user.png"}
+          alt="img"
+        />
+      </Avatar>
+
+      <p className="bg-white p-3 rounded-2xl text-sm font-semibold">
+        {content}
+      </p>
+    </div>
+  );
+};
