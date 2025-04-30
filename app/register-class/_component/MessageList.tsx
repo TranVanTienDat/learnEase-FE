@@ -24,7 +24,7 @@ const Message = (msg: ChatMessage) => {
   return (
     <div
       className={cn(
-        "flex items-center gap-3 pb-2",
+        "flex items-start gap-3 pb-2",
         isUser ? "flex-row-reverse" : "flex-row"
       )}
     >
@@ -36,7 +36,12 @@ const Message = (msg: ChatMessage) => {
         />
       </Avatar>
 
-      <p className="bg-white p-3 rounded-2xl text-sm font-semibold">
+      <p
+        className={cn(
+          "bg-white p-3 rounded-2xl text-sm font-semibold",
+          isError && "bg-[#f8d7da] text-[#721c24]"
+        )}
+      >
         {streaming && (
           <span className=" text-gray-400 font-normal flex items-center gap-1">
             Thinking <LoadingSnipper className="p-0" iconClass="w-4 h-4" />

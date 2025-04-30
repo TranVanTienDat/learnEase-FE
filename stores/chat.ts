@@ -101,16 +101,16 @@ export const useChatStore = createPersistStore(
             streaming: false,
             content: response.data.content,
           };
-        } catch (error) {
+        } catch (error: any) {
           console.error("Error:", error);
           botMessage = {
             ...botMessage,
             streaming: false,
             isError: true,
             content:
-              error instanceof Error
-                ? error.message
-                : "Có lỗi xảy ra, vui lòng thử lại sau",
+              error?.response?.data?.message ||
+              error?.message ||
+              "Có lỗi xảy ra, vui lòng thử lại sau",
           };
         } finally {
           get().updateMessage(botMessage);
