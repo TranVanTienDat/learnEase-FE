@@ -2,23 +2,23 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { ChatMessage, useChatStore } from "@/stores/chat";
+import Markdown from "./Markdown";
+import { LoadingSnipper } from "@/components/LoadingSnipper";
 
 export default function MessageList() {
   const messages = useChatStore((state) => state.getSession().messages);
 
   return (
-    <div className="mb-[84px] h-[calc(100vh-140px)] overflow-y-scroll table-wrapper px-4">
-      <div className="max-w-[768px] mx-auto py-2 flex flex-col gap-2 ">
-        {messages.map((msg) => (
-          <Message key={msg.id} {...msg} />
-        ))}
-      </div>
+    <div className="max-w-[768px] mx-auto py-2 flex flex-col gap-2 ">
+      {messages.map((msg) => (
+        <Message key={msg.id} {...msg} />
+      ))}
     </div>
   );
 }
 
 const Message = (msg: ChatMessage) => {
-  const { content, role } = msg;
+  const { content, role, streaming, isError } = msg;
   const isUser = role === "user";
 
   return (
@@ -37,7 +37,13 @@ const Message = (msg: ChatMessage) => {
       </Avatar>
 
       <p className="bg-white p-3 rounded-2xl text-sm font-semibold">
-        {content}
+        {streaming && (
+          <span className=" text-gray-400 font-normal flex items-center gap-1">
+            Thinking <LoadingSnipper className="p-0" iconClass="w-4 h-4" />
+          </span>
+        )}
+
+        <Markdown content={content} />
       </p>
     </div>
   );

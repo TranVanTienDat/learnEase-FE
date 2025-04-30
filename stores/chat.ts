@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { createPersistStore } from "./store";
+import { chatbotApi } from "@/apiRequest/chatbot";
 export type ChatMessage = {
   id: string;
   role: "user" | "assistant";
@@ -78,13 +79,68 @@ export const useChatStore = createPersistStore(
         }));
       },
 
-      onUserInput(content: string) {
+      async onUserInput(content: string) {
         const message: ChatMessage = createMessage({
           role: "user",
           content: content,
         });
 
         get().onNewMessage(message);
+        let botMessage: ChatMessage = createMessage({
+          role: "assistant",
+          streaming: true,
+          content: "",
+        });
+        get().onNewMessage(botMessage);
+
+        try {
+          const response = await chatbotApi.askQuestion(content);
+
+          botMessage = {
+            ...botMessage,
+            streaming: false,
+            content: response.data.content,
+          };
+        } catch (error) {
+          console.error("Error:", error);
+          botMessage = {
+            ...botMessage,
+            streaming: false,
+            isError: true,
+            content:
+              error instanceof Error
+                ? error.message
+                : "Có lỗi xảy ra, vui lòng thử lại sau",
+          };
+        } finally {
+          get().updateMessage(botMessage);
+        }
+      },
+
+      updateMessage(messageItem: ChatMessage) {
+        const session = get().session;
+        const messages = session.messages;
+
+        const messageIndex = messages.findIndex(
+          (msg) => msg.id === messageItem.id
+        );
+        if (messageIndex !== -1) {
+          messages[messageIndex] = {
+            ...messages[messageIndex],
+            ...messageItem,
+          };
+
+          session.lastUpdate = Date.now();
+          set(() => ({
+            session: {
+              ...session,
+              messages: [...messages],
+            },
+          }));
+
+          return true;
+        }
+        return false;
       },
 
       getMessagesWithMemory(): ChatMessage[] {
