@@ -1,13 +1,26 @@
 import { v4 as uuidv4 } from "uuid";
 import { createPersistStore } from "./store";
 import { chatbotApi } from "@/apiRequest/chatbot";
+import { TogetherAI } from "@/provider/togetherAI";
+import { estimateTokenLength } from "@/utils/token";
+
+const MODEL_TOKEN_LIMIT = 500;
+const OUTPUT_TOKEN_LIMIT = 200;
+const INPUT_TOKEN_LIMIT = MODEL_TOKEN_LIMIT - OUTPUT_TOKEN_LIMIT;
+const TEN_DAYS_MS = 10 * 24 * 60 * 60 * 1000;
+
+function removeTags(input: string): string {
+  return input.replace(/<[^>]*>/g, "").trim();
+}
+
 export type ChatMessage = {
   id: string;
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "system";
   content: string;
   streaming?: boolean;
   isError?: boolean;
   date?: string;
+  messageError?: string;
 };
 
 export interface ChatStat {
@@ -93,8 +106,12 @@ export const useChatStore = createPersistStore(
         });
         get().onNewMessage(botMessage);
 
+        const messagePrompt = get().session.memoryPrompt
+          ? get().session.memoryPrompt + "\n" + content
+          : content;
+
         try {
-          const response = await chatbotApi.askQuestion(content);
+          const response = await chatbotApi.askQuestion(messagePrompt);
 
           botMessage = {
             ...botMessage,
@@ -107,7 +124,7 @@ export const useChatStore = createPersistStore(
             ...botMessage,
             streaming: false,
             isError: true,
-            content:
+            messageError:
               error?.response?.data?.message ||
               error?.message ||
               "Có lỗi xảy ra, vui lòng thử lại sau",
@@ -115,6 +132,8 @@ export const useChatStore = createPersistStore(
         } finally {
           get().updateMessage(botMessage);
         }
+
+        get().summarizeSessionSimple(get().session);
       },
 
       updateMessage(messageItem: ChatMessage) {
@@ -166,6 +185,76 @@ export const useChatStore = createPersistStore(
 
       getSession(): ChatSession {
         return get().session;
+      },
+
+      async summarizeSessionSimple(session: ChatSession) {
+        const now = Date.now();
+        if (now - session.lastUpdate > TEN_DAYS_MS) {
+          session.lastUpdate = now;
+          session.memoryPrompt = "";
+        }
+
+        if (!session || session.messages.length === 0) {
+          console.log("[Summarize] Empty session.");
+          return;
+        }
+
+        // 1. Lọc valid messages
+        let validMessages = session.messages.filter(
+          (msg) => !msg.isError && msg.content.trim().length > 0
+        );
+
+        if (validMessages.length === 0) {
+          console.log("[Summarize] No valid messages.");
+          return;
+        }
+
+        // 2. Cắt bớt message nếu tổng token vượt
+        let totalTokens = validMessages.reduce(
+          (sum, msg) => sum + estimateTokenLength(msg.content),
+          0
+        );
+
+        while (totalTokens > INPUT_TOKEN_LIMIT && validMessages.length > 1) {
+          validMessages.shift(); // bỏ tin nhắn cũ nhất
+          totalTokens = validMessages.reduce(
+            (sum, msg) => sum + estimateTokenLength(msg.content),
+            0
+          );
+        }
+
+        // 3. Ghép thêm system prompt yêu cầu tóm tắt
+        validMessages.push({
+          id: Date.now().toString(),
+          role: "system",
+          content:
+            "Please summarize the conversation above in less than 200 tokens. Be concise and highlight important points.",
+        });
+
+        const promptMessages = validMessages.map((msg) => ({
+          role: msg.role,
+          content: msg.content,
+        }));
+
+        const llm = new TogetherAI();
+        try {
+          const response = await llm.chat(promptMessages);
+
+          if (!response) return;
+          const summarizedContent = response.choices[0].message.content;
+
+          session.memoryPrompt = removeTags(summarizedContent);
+          session.lastUpdate = Date.now();
+        } catch (error) {
+          console.error("[Summarize Error]", error);
+        }
+      },
+
+      resetSession() {
+        set(() => ({
+          session: createEmptySession(),
+          lastInput: "",
+        }));
       },
     };
 

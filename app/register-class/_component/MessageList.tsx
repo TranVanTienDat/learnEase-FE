@@ -18,7 +18,7 @@ export default function MessageList() {
 }
 
 const Message = (msg: ChatMessage) => {
-  const { content, role, streaming, isError } = msg;
+  const { content, role, streaming, isError, messageError } = msg;
   const isUser = role === "user";
 
   return (
@@ -49,6 +49,7 @@ const Message = (msg: ChatMessage) => {
         )}
 
         <Markdown content={content} />
+        {messageError && messageError}
       </p>
     </div>
   );
