@@ -30,7 +30,7 @@ export interface ChatStat {
 }
 
 export interface ChatSession {
-  //   id: string;
+  id: string;
   memoryPrompt: string;
   messages: ChatMessage[];
   lastUpdate: number;
@@ -61,6 +61,7 @@ function createEmptySession(): ChatSession {
       wordCount: 0,
       charCount: 0,
     },
+    id: uuidv4(),
     lastUpdate: Date.now(),
   };
 }
@@ -111,7 +112,10 @@ export const useChatStore = createPersistStore(
           : content;
 
         try {
-          const response = await chatbotApi.askQuestion(messagePrompt);
+          const response = await chatbotApi.askQuestion({
+            content: messagePrompt,
+            id: get().session.id,
+          });
 
           botMessage = {
             ...botMessage,
@@ -133,7 +137,7 @@ export const useChatStore = createPersistStore(
           get().updateMessage(botMessage);
         }
 
-        get().summarizeSessionSimple(get().session);
+        // get().summarizeSessionSimple(get().session);
       },
 
       updateMessage(messageItem: ChatMessage) {
@@ -228,7 +232,7 @@ export const useChatStore = createPersistStore(
           id: Date.now().toString(),
           role: "system",
           content:
-            "Please summarize the conversation above in less than 200 tokens. Be concise and highlight important points.",
+            "Please summarize the conversation above in less than 100 tokens. Be concise and highlight important points.",
         });
 
         const promptMessages = validMessages.map((msg) => ({

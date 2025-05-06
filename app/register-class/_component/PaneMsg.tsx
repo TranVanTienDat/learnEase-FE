@@ -6,7 +6,8 @@ import { useChatStore } from "@/stores/chat";
 export default function PaneMsg() {
   const ref = useRef<HTMLDivElement | null>(null);
   const messages = useChatStore((state) => state.session.messages);
-
+  const { session } = useChatStore((state) => state);
+  console.log("PaneMsg", session);
   const scrollToBottom = useCallback(() => {
     if (ref.current) {
       ref.current.scrollTo({

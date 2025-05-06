@@ -186,18 +186,6 @@ const StudentItem = ({
             )}
           </div>
         </td>
-        <td className=" text-center">
-          <Button
-            variant={"link"}
-            className="p-0 font-normal text-md flex gap-1 justify-center w-full"
-            onClick={handleCopyCommentLink}
-          >
-            <img src="/images/icons/copy.svg" alt="" />
-            <span className="text-[#0f1834]">
-              {isCopied ? "Copied!" : "Copy"}
-            </span>
-          </Button>
-        </td>
       </tr>
     </>
   );

@@ -165,20 +165,6 @@ export default function Attendances({
         },
       ],
     },
-    {
-      className: "w-[80px]",
-      subRows: [
-        {
-          title: {
-            label: "link",
-            value: "link",
-          },
-          disabled: true,
-          [SortType.DESC]: () => {},
-          [SortType.ASC]: () => {},
-        },
-      ],
-    },
   ];
 
   const handleReFetchList = (item: StudentType) => {
@@ -329,12 +315,6 @@ export default function Attendances({
       return type === SortType.ASC ? totalB - totalA : totalA - totalB;
     });
     setStudents(newStudents);
-  };
-
-  const handleCopyLinkParent = () => {
-    navigator.clipboard.writeText(
-      "link trang gửi cho phụ huynh sẽ được cập nhật sau"
-    );
   };
 
   const top3Point = useMemo(() => {

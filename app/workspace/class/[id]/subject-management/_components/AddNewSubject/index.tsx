@@ -75,6 +75,7 @@ export default function AddNewSubject({
       </Button>
       <AddNewSubjectModal title={tCommon("addNewSubject")}>
         <MultiSelect
+          modalPopover={true}
           options={initSubjects}
           defaultValue={subjects}
           onValueChange={setSubjects}
@@ -82,9 +83,10 @@ export default function AddNewSubject({
           variant="inverted"
           animation={2}
           maxCount={3}
-          contentClassName="w-[400px]"
+          contentClassName="w-[400px]  "
           extraText={tCommon("subject")}
         />
+
         <Button onClick={handleAddSubject} disabled={subjects.length === 0}>
           {t("add")}
         </Button>

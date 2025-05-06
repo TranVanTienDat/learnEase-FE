@@ -8,10 +8,17 @@ export type ChatbotResponse = {
 };
 
 export const chatbotApi = {
-  askQuestion: async (question: string): Promise<ChatbotResponse> => {
+  askQuestion: async ({
+    content,
+    id,
+  }: {
+    content: string;
+    id: string;
+  }): Promise<ChatbotResponse> => {
     try {
-      const response = await axios.post(`${BASE_URL}/v1/chatbot`, {
-        question: question,
+      const response = await axios.post(`${BASE_URL}/v1/chat`, {
+        question: content,
+        id: id,
       });
       return response.data;
     } catch (error) {
