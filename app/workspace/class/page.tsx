@@ -379,6 +379,7 @@ export default function Class() {
       <div className="absolute right-[30px] top-[-44px] flex gap-2 justify-center text-sm text-primary underline">
         <Link href="/workspace/class/create">{t("addClass")}</Link>
         <Link href="/workspace/class/config">Phiếu điểm</Link>
+        <Link href="/workspace/registration-students">Học sinh đăng kí</Link>
       </div>
       <div className="lg:px-10 pb-10 ">
         <ScheduleTable />

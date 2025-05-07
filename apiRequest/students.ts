@@ -50,6 +50,15 @@ export type StudentType = {
   [key: string]: any;
 };
 
+export type RegistrationStudents = {
+  id: string;
+  fullName: string;
+  parentPhone: string;
+  parentName: string;
+  classID: string;
+  created_at: string;
+};
+
 export type StudentParamsType = {
   nickname?: string;
   class?: string;
@@ -114,6 +123,24 @@ const studentRequest = {
       console.log(error);
     }
   },
+  getRegistrationStudents: async (pr?: any) => {
+    try {
+      const params = {
+        "pagination[withCount]": true,
+        ...pr,
+      };
+      const paramsString = QueryString.stringify(params);
+      const res = await http.get<{ data: RegistrationStudents[] }>(
+        `/student-registrations?${paramsString}`
+      );
+      console.log("res:", res);
+      if (res.status === 200) return res.payload.data || [];
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  deleteRegistrationStudent: async (studentId: string) =>
+    http.delete<any>(`/student-registrations/${studentId}`),
   getImageLibrary: async () => http.get<ImageLibraryRes>("/v2/default-images"),
   getLearningTrackingStudent: async (
     classId: number,

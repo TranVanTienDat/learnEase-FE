@@ -8,42 +8,6 @@ import Image from "next/image";
 import Link from "next/link";
 import Sidebar from "../Sidebar";
 
-const HeaderNav = () => {
-  const t = useTranslations("common");
-  const navs = [
-    // {
-    //   id: 1,
-    //   text: t("class"),
-    //   href: "/workspace/class",
-    //   target: "_self",
-    // },
-    {
-      id: 3,
-      text: t("board"),
-      href: "/workspace/white-board",
-      target: "_blank",
-    },
-  ];
-  return (
-    <div className="gap-6 items-center rounded-full p-2 hidden lg:flex">
-      <HeadNavMobile />
-      <ul className="md:flex hidden">
-        {navs.map((item) => (
-          <li key={item.id}>
-            <Link
-              href={item.href}
-              target={item.target}
-              className="font-medium text-white leading-none text-[18px] md:text-[16px] xl:text-[18px] hover:text-secondary transition duration-300 ease-in-out px-5 capitalize"
-            >
-              {item.text}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
 export default function WorkSpaceHeader() {
   return (
     <header className="absolute top-0 left-0 right-0 bg-transparent z-20">
@@ -56,7 +20,6 @@ export default function WorkSpaceHeader() {
               <Image src="/images/logo.svg" alt="logo" width={50} height={50} />
             </Link>
           </div>
-          <HeaderNav />
           <div className="flex items-center gap-2 md:gap-8">
             <SignOutButton />
           </div>

@@ -1,7 +1,6 @@
 import SignIn from "@/app/(auth)/_components/SignIn";
 import { getSessionToken } from "@/app/actions";
 import HeadNavMobile from "@/components/HeaderNavMobile";
-import LocaleSwitcher from "@/components/LocaleSwỉtcher";
 import { Button } from "@/components/ui/button";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -168,7 +167,6 @@ export default async function Header() {
             )}
           </div>
         </div>
-        {/* <HeaderNav /> */}
       </div>
     </header>
   );

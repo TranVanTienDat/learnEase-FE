@@ -40,6 +40,7 @@ const Breadcrumb = ({ homeElement, separator }: TBreadCrumbProps) => {
     "group-generator": t("divideGroup"),
     "click-time": t("stopwatch"),
     statistical: t("statistical"),
+    "registration-students": "Học sinh đăng kí",
   };
 
   // if (data?.name) {

@@ -60,12 +60,12 @@ export default function WorkSpaceHeaderNavMobile() {
           <FontAwesomeIcon className="w-12 h-6 text-white" icon={faTimes} />
         </button>
         <Link href="/">
-          <Image
+          {/* <Image
             src="/images/Logo-green-text-2.png"
             alt="logo"
             width={270}
             height={80}
-          />
+          /> */}
         </Link>
         <ul className="pl-4 divide-y">
           {navs.map((item) => (
