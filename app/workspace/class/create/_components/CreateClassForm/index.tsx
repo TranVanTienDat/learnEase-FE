@@ -43,7 +43,7 @@ import { CalendarDaysIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import * as XLSX from "xlsx";
@@ -223,8 +223,10 @@ const nameHead = [
 ];
 const ExcelAddListStudents = ({
   onChangeFileUpload,
+  setStudentsExcel,
 }: {
   onChangeFileUpload: (file: File) => void;
+  setStudentsExcel: Dispatch<SetStateAction<any[]>>;
 }) => {
   const t = useTranslations("class");
   const tCommon = useTranslations("common");
@@ -269,6 +271,7 @@ const ExcelAddListStudents = ({
           head: nameHead,
           body: convertDataTable(bodyTable),
         });
+        setStudentsExcel(convertDataTable(bodyTable));
       }
       onChangeFileUpload(file);
       return data;
@@ -395,12 +398,14 @@ const AddListStudents = ({
   toggleGetDataFromExcel,
   isGetDataFromExcel,
   onChangeFileUpload,
+  setStudentsExcel,
 }: {
   onAddStudents: (st: Array<StudentType>) => void;
   students: Array<StudentType>;
   toggleGetDataFromExcel: () => void;
   isGetDataFromExcel: boolean;
   onChangeFileUpload: (file: File) => void;
+  setStudentsExcel: Dispatch<SetStateAction<any[]>>;
 }) => {
   const t = useTranslations("class");
 
@@ -433,7 +438,10 @@ const AddListStudents = ({
         <div className="flex-1" />
       </div>
       {isGetDataFromExcel ? (
-        <ExcelAddListStudents onChangeFileUpload={onChangeFileUpload} />
+        <ExcelAddListStudents
+          onChangeFileUpload={onChangeFileUpload}
+          setStudentsExcel={setStudentsExcel}
+        />
       ) : (
         <NormalAddListStudents
           onAddStudents={onAddStudents}
@@ -455,6 +463,8 @@ export default function CreateClassForm() {
   const tToastMessage = useTranslations("toastmessage");
 
   const [students, setStudents] = useState<StudentType[]>([]);
+  const [studentsExcel, setStudentsExcel] = useState<any[]>([]);
+  console.log("students", students);
   const [ListSubject, setListSubject] = useState<
     { label: string; value: string }[]
   >([]);
@@ -517,53 +527,16 @@ export default function CreateClassForm() {
   const mutationImportExcel = useCreateClassByImportExcel();
   const mutationCreateClassNormal = useCreateClassNormal();
 
-  const handleFileUpload = async () => {
-    if (!selectedFile) {
-      setErrorMessage(t("enterStudentList"));
-    } else {
-      const formData = new FormData();
-      formData.append("files", selectedFile);
-      try {
-        const res = await classRequest.uploadFile(formData);
-        const idFileUpload = res?.payload?.[0]?.id;
-        if (idFileUpload) {
-          const { seasonDuration, ...value } = form.getValues();
-          const formattedSeasonDuration = `${format(
-            seasonDuration.start || "",
-            "MM/yyyy"
-          )} - ${format(seasonDuration.end || "", "MM/yyyy")}`;
-          const res = await mutationImportExcel.mutateAsync({
-            ...form.getValues(),
-            seasonDuration: formattedSeasonDuration,
-            excelId: idFileUpload,
-          });
-          if (res.status === 200) {
-            toast({
-              title: tToastMessage("success"),
-              description: t("classCreatedSuccess"),
-            });
-            queryClient.resetQueries({ queryKey: ["classes"] });
-            router.push("/workspace/class");
-          } else {
-            toast({
-              variant: "destructive",
-              title: tToastMessage("error"),
-              description: t("checkFieldsCreateClass"),
-            });
-          }
-        }
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          title: tToastMessage("error"),
-          description: t("classCreationError"),
-        });
-      }
-    }
-  };
-
   const handleAddClassNormal = async (values: z.infer<typeof formSchema>) => {
-    if (!students.length) return setErrorMessage(t("enterStudentList"));
+    // Xử lí students nếu từ file excel
+    let studentEx = [];
+    if (isGetDataFromExcel) {
+      studentEx = transformData(studentsExcel);
+    }
+
+    if (!students.length && !studentEx.length)
+      return setErrorMessage(t("enterStudentList"));
+
     const { seasonDuration, ...value } = values;
     setErrorMessage("");
     const formattedSeasonDuration = `${format(
@@ -573,7 +546,7 @@ export default function CreateClassForm() {
     const res = await mutationCreateClassNormal.mutateAsync({
       ...values,
       seasonDuration: formattedSeasonDuration,
-      students,
+      students: isGetDataFromExcel ? studentEx : students,
     });
     if (res.status === 200) {
       toast({
@@ -591,11 +564,17 @@ export default function CreateClassForm() {
     }
   };
 
+  function transformData(rawData: any) {
+    return rawData.map((item: any) => ({
+      fullName: item[1],
+      nickname: item[2],
+      gender: item[3] && item[3].toLowerCase() === "nam",
+      parentPhone: item[4],
+      group: item[5],
+    }));
+  }
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (isGetDataFromExcel) {
-      handleFileUpload();
-      return;
-    }
     handleAddClassNormal(values);
   }
 
@@ -726,6 +705,7 @@ export default function CreateClassForm() {
           toggleGetDataFromExcel={toggleGetDataFromExcel}
           isGetDataFromExcel={isGetDataFromExcel}
           onChangeFileUpload={setSelectedFile}
+          setStudentsExcel={setStudentsExcel}
         />
         <Button
           type="submit"
