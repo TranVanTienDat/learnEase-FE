@@ -2,12 +2,16 @@ import { format, isSameDay } from "date-fns";
 
 export const convertImageUrl = (url: string | undefined) =>
   url
-    ? `${process.env.NEXT_PUBLIC_API_ENDPOINT_URL_IMAGE}${url}`
+    ? url.startsWith("https://")
+      ? url
+      : `${process.env.NEXT_PUBLIC_API_ENDPOINT_URL_IMAGE}${url}`
     : "/images/logo.svg";
 
 export const convertStudentImageUrl = (url: string | undefined) =>
   url
-    ? `${process.env.NEXT_PUBLIC_API_ENDPOINT_URL_IMAGE}${url}`
+    ? url.startsWith("https://")
+      ? url
+      : `${process.env.NEXT_PUBLIC_API_ENDPOINT_URL_IMAGE}${url}`
     : "/images/logo.png";
 
 export const convertTime = (time: string): string => time.substring(0, 5);
