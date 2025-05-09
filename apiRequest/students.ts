@@ -55,7 +55,7 @@ export type RegistrationStudents = {
   fullName: string;
   parentPhone: string;
   parentName: string;
-  classID: string;
+  className: string;
   created_at: string;
 };
 
@@ -133,7 +133,6 @@ const studentRequest = {
       const res = await http.get<{ data: RegistrationStudents[] }>(
         `/student-registrations?${paramsString}`
       );
-      console.log("res:", res);
       if (res.status === 200) return res.payload.data || [];
     } catch (error) {
       console.log(error);

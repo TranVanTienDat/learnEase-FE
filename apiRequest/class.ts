@@ -52,7 +52,7 @@ const classRequest = {
     const params = {
       ["populate[students][count]"]: true,
       ["populate[assistantTeachers]"]: true,
-      ["sort[id]"]: "asc",
+      ["sort[id]"]: "desc",
       ["pagination[pageSize]"]: 25,
       ...pr,
     };

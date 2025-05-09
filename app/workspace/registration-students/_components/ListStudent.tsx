@@ -9,7 +9,6 @@ export default function ListStudent({
   data: RegistrationStudents[] | undefined;
 }) {
   const tCommon = useTranslations("common");
-
   const headSchedule = [
     {
       name: "order",
@@ -19,11 +18,12 @@ export default function ListStudent({
       name: "fullName",
     },
     {
-      name: "parentsPhone",
-    },
-    {
       name: "parentsName",
     },
+    {
+      name: "parentsPhone",
+    },
+
     { name: "class" },
     { name: "action" },
   ];

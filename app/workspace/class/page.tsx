@@ -307,56 +307,6 @@ const ClassList = () => {
   );
 };
 
-// const ClassesGroup = () => {
-//   const { data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } =
-//     useFetchClasses();
-//   const flattenedData = data?.pages?.flatMap?.((item: any) => item?.data) || [];
-//   const t = useTranslations("class");
-//   if (flattenedData?.length === 0) return null;
-//   return (
-//     <>
-//       <div className="mt-10">
-//         <h2 className="text-[40px] md:text-[60px] text-center font-semibold py-4">
-//           {t("coClass")}
-//         </h2>
-//         <div className="  border-[2px]  px-2 rounded-[20px]">
-//           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 my-2 px-2 h-[480px] overflow-y-auto">
-//             {flattenedData.map(
-//               (item: JSX.IntrinsicAttributes & IClassItemProps) => (
-//                 <ClassItem
-//                   key={item.id}
-//                   {...item}
-//                   allowRemove
-//                   allowEdit={false}
-//                   allowViewStudent={false}
-//                 />
-//               )
-//             )}
-//           </div>
-//           {hasNextPage ? (
-//             <div className="flex justify-center py-[10px]">
-//               <Button
-//                 variant="link"
-//                 onClick={() => fetchNextPage()}
-//                 disabled={!hasNextPage || isFetchingNextPage}
-//               >
-//                 {isFetchingNextPage
-//                   ? t("loadingMore")
-//                   : hasNextPage
-//                   ? t("loadMore")
-//                   : null}
-//               </Button>
-//               <div>
-//                 {isFetching && !isFetchingNextPage ? "Fetching..." : null}
-//               </div>
-//             </div>
-//           ) : null}
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
 export default function Class() {
   const t = useTranslations("class");
   const userDetail = useUserDetailStore((state) => state.user);

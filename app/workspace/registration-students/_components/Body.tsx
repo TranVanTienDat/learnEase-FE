@@ -16,11 +16,9 @@ export default function Body({
 }) {
   const tToast = useTranslations("toastmessage");
   const tCommon = useTranslations("common");
-  const [localStudents, setLocalStudents] = useState(students);
   const router = useRouter();
   const { toast } = useToast();
   const [deleteId, setDeleteId] = useState<number | string>(-1);
-
   const { toggle: toggleRemove, modal: RemoveCourseModal } = useModals();
 
   const handleRemove = async (id: string) => {
@@ -66,8 +64,8 @@ export default function Body({
         </DialogFooter>
       </RemoveCourseModal>
       <tbody className="bg-white">
-        {!!localStudents?.length &&
-          localStudents.map((item, index) => (
+        {students?.length &&
+          students.map((item, index) => (
             <tr
               key={item.id}
               className="text-md [&:not(:last-child)]:border-b hover:bg-[#E8F4E6]"
@@ -85,7 +83,7 @@ export default function Body({
                 <p>{item.parentPhone}</p>
               </td>
               <td className="p-1 px-3 ">
-                <p>{item.classID}</p>
+                <p>{item.className}</p>
               </td>
               <td className="p-1 px-3">
                 <div className="flex gap-6 justify-start">
