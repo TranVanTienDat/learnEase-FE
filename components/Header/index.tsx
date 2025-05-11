@@ -1,6 +1,5 @@
 import SignIn from "@/app/(auth)/_components/SignIn";
 import { getSessionToken } from "@/app/actions";
-import HeadNavMobile from "@/components/HeaderNavMobile";
 import { Button } from "@/components/ui/button";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -75,7 +74,6 @@ const HeaderNav = async () => {
   ];
   return (
     <div className="flex items-center rounded-full p-2 bg-white">
-      <HeadNavMobile />
       <ul className="md:flex divide-x divide-[#BEBEBE] hidden">
         {navs.map((item) => (
           <li key={item.id}>

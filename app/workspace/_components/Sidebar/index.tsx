@@ -59,42 +59,12 @@ export default function Sidebar() {
       icon: LifeBuoy,
       className: "h-[44px]",
     },
-    // {
-    //   name: TOOLS_PATH.NAME_PICKER.name,
-    //   href: convertClassPath(TOOLS_PATH.NAME_PICKER.path),
-    //   icon: Star,
-    //   className: "h-[44px]",
-    // },
-    // {
-    //   name: TOOLS_PATH.NAME_PICKER_N.name,
-    //   href: convertClassPath(TOOLS_PATH.NAME_PICKER_N.path),
-    //   icon: Sparkles,
-    //   className: "h-[44px]",
-    // },
-    {
-      name: TOOLS_PATH.GROUP_GENERATOR.name,
-      href: convertClassPath(TOOLS_PATH.GROUP_GENERATOR.path),
-      icon: Boxes,
-      className: "h-[44px]",
-    },
-    // {
-    //   name: TOOLS_PATH.RACE.name,
-    //   href: convertClassPath(TOOLS_PATH.RACE.path),
-    //   icon: Bike,
-    //   className: "h-[44px]",
-    // },
     {
       name: TOOLS_PATH.GROUP.name,
       href: convertClassPath(TOOLS_PATH.GROUP.path),
       icon: Users,
       className: "h-[44px]",
     },
-    // {
-    //   name: TOOLS_PATH.CLICK_TIME.name,
-    //   href: convertClassPath(TOOLS_PATH.CLICK_TIME.path),
-    //   icon: AlarmClockCheck,
-    //   className: "h-[44px]",
-    // },
     {
       name: TOOLS_PATH.DIAGRAM.name,
       href: convertClassPath(TOOLS_PATH.DIAGRAM.path),
@@ -111,10 +81,6 @@ export default function Sidebar() {
     {
       name: "statisticalLearn",
       href: convertClassPath("statistical?key=point"),
-    },
-    {
-      name: "courseManagement",
-      href: convertClassPath("course-management"),
     },
     {
       name: "subjectManagement",

@@ -1,5 +1,6 @@
 import studentRequest from "@/apiRequest/students";
 import ListStudent from "./_components/ListStudent";
+export const dynamic = "force-dynamic";
 
 export default async function Page() {
   const data = await studentRequest.getRegistrationStudents();
