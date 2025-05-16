@@ -30,7 +30,6 @@ export default function ListGroup({
   const tCommon = useTranslations("common");
   const router = useRouter();
   const [groups, setGroups] = useState<GroupsType[] | []>([]);
-  const [isImg, setIsImg] = useState<boolean>(true);
 
   useEffect(() => {
     const updatedGroupList = defaultStudents.reduce<GroupsType[]>(
@@ -54,18 +53,14 @@ export default function ListGroup({
   return (
     <div className="container pb-10">
       <BackTitle url={`/workspace/class/${classId}`}>
-        <h1 className="capitalize text-[32px] font-bold">{t("group")}</h1>
+        <h1 className="capitalize text-[32px] font-bold">Nhóm</h1>
       </BackTitle>
       {groups.length > 1 || groups[0]?.name !== "Chưa có tổ/nhóm" ? (
         <>
           <div>
-            <GroupCollection tableData={groups} isImg={isImg} />
+            <GroupCollection tableData={groups} />
           </div>
-          <GroupButton
-            setIsImg={setIsImg}
-            isImg={isImg}
-            lengthGroup={groups.length}
-          />
+          <GroupButton />
         </>
       ) : (
         <div className="flex flex-col items-center gap-2 mt-10">

@@ -86,7 +86,7 @@ export default function StudentTable({
   handleDragStart,
 }: StudentTablePropsType) {
   return (
-    <div className="py-4">
+    <div className="pb-4">
       <Table>
         <TableBody>
           {tableData.map((row, rowIndex) => (

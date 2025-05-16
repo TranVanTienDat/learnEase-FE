@@ -34,23 +34,6 @@ const THeadItem = ({
               className="flex gap-4 items-center h-10 p-2 px-3 flex-1 text-sm justify-between"
             >
               <span>{t(subRow.title.label)}</span>
-              {!subRow.disabled && (
-                <img
-                  src={iconRender(subRow)}
-                  onClick={() => {
-                    action(subRow);
-                    onChange?.({
-                      status:
-                        activeSort?.status === SortType.DESC
-                          ? SortType.ASC
-                          : SortType.DESC,
-                      key: subRow.title.value,
-                    });
-                  }}
-                  className="cursor-pointer"
-                  alt=""
-                />
-              )}
             </p>
           );
         })}

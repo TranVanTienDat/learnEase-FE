@@ -88,6 +88,7 @@ export type AttendanceStudentType = {
     minus: string;
   };
   dailyRecord: dailyRecordType;
+  avatar: any;
 } & {
   isShowEditComment: boolean;
   isShowSum?: boolean;

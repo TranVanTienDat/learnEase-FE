@@ -59,7 +59,6 @@ export default function DatePicker({
   return (
     <div className="flex justify-start gap-4 font-medium">
       <div className="flex items-center gap-2">
-        <label className=" text-sm">{t("selectAttendanceDate")}</label>
         <Popover open={isOpen} onOpenChange={toggle}>
           <PopoverTrigger asChild>
             <Button
@@ -97,7 +96,6 @@ export default function DatePicker({
         </Popover>
       </div>
       <div className="flex items-center gap-2">
-        <label className=" text-sm mr-2">{t("toggleAttendanceStatus")}</label>
         <SwitchAttendance
           status={isAttendanceAll}
           onChange={handleToggle}

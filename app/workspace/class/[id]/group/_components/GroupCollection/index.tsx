@@ -6,7 +6,6 @@ import { convertImageUrl } from "@/utils";
 import { handleRandom, handleRemoveAll } from "@/utils/group";
 import { useTranslations } from "next-intl";
 
-
 type GroupsType = {
   name: string;
   listStudent: StudentType[];
@@ -34,10 +33,13 @@ const RowGroup = ({ row, indexRow, isImg }: RowGroupType) => {
       id={`nhom${indexRow}`}
     >
       <div className="p-[10px] pr-[4px]">
-        <h3 className="text-[16px] font-bold relative mb-6 text-primary">
-          {convertNameTeam(row.name, t, tCommon)}
-          <span className="absolute left-0 bottom-[-12px] w-[55px] h-[4px] bg-secondary rounded-[999999px] "></span>
-        </h3>
+        <div className="flex justify-between items-start">
+          <h3 className="text-[16px] font-bold relative mb-6 text-primary">
+            {convertNameTeam(row.name, t, tCommon)}
+            <span className="absolute left-0 bottom-[-12px] w-[55px] h-[4px] bg-secondary rounded-[999999px] "></span>
+          </h3>
+          <ButtonGivePoints indexRow={indexRow} listStudent={row.listStudent} />
+        </div>
         <div
           className="h-[284px] table-wrapper overflow-y-auto pr-[2px]"
           id={`nhom-dshs${indexRow}`}
@@ -47,7 +49,6 @@ const RowGroup = ({ row, indexRow, isImg }: RowGroupType) => {
           })}
         </div>
       </div>
-      <Buttons indexRow={indexRow} listStudent={row.listStudent} />
     </div>
   );
 };
@@ -78,31 +79,22 @@ const ColGroup = ({ isImg, col }: ColGroupPropsType) => {
 };
 
 type GroupCollectionType = {
-  isImg: boolean;
   tableData: GroupsType[];
 };
 
-export default function GroupCollection({
-  isImg,
-  tableData,
-}: GroupCollectionType) {
+export default function GroupCollection({ tableData }: GroupCollectionType) {
   return (
     <div className="grid grid-cols-1 gap-[15px] mt-[20px] mb-[40px] sm:grid-cols-2 md:grid-cols-3 ">
       {tableData.map((row, indexRow) => {
         return (
-          <RowGroup
-            isImg={isImg}
-            key={indexRow}
-            row={row}
-            indexRow={indexRow}
-          />
+          <RowGroup isImg={true} key={indexRow} row={row} indexRow={indexRow} />
         );
       })}
     </div>
   );
 }
 
-const Buttons = ({
+const ButtonGivePoints = ({
   indexRow,
   listStudent,
 }: {
@@ -111,11 +103,6 @@ const Buttons = ({
 }) => {
   const t = useTranslations("group");
   const { toggle, updateStudent } = useGivePointStore();
-
-  const handleRandomSelection = async () => {
-    handleRemoveAll();
-    await handleRandom(indexRow);
-  };
 
   const getParentElement = (selector: string) =>
     document.querySelector(selector);
@@ -152,22 +139,10 @@ const Buttons = ({
   };
 
   return (
-    <div className="flex justify-center border-t p-[10px] gap-[12px]">
-      <ButtonAction
-        name={t("callOne")}
-        className="bg-primary text-white hover:bg-secondary border py-[6px] px-[12px] text-[14px] w-[110px]"
-        action={handleRandomSelection}
-      />
-      <ButtonAction
-        name={t("givePoints")}
-        className="bg-white hover:bg-primary border text-[#0F1834] hover:text-white py-[6px] px-[12px] text-[14px] w-[110px]"
-        action={handleGivePoints}
-      />
-      <ButtonAction
-        name={t("refresh")}
-        className="bg-white hover:bg-primary border text-[#0F1834] hover:text-white py-[6px] px-[12px] text-[14px] w-[110px]"
-        action={handleRemoveAll}
-      />
-    </div>
+    <ButtonAction
+      name={t("givePoints")}
+      className="bg-white hover:bg-primary border text-[#0F1834] hover:text-white py-[4px] px-[8px] text-[14px] w-[90px] mr-[6px] border-primary"
+      action={handleGivePoints}
+    />
   );
 };

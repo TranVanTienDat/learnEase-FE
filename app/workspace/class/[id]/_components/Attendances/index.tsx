@@ -42,6 +42,7 @@ export default function Attendances({
   };
   searchParams: any;
 }) {
+  console.log("defaultStudents", defaultStudents);
   const t = useTranslations("attendance");
   const tCommon = useTranslations("common");
   const tToastMessage = useTranslations("toastmessage");
@@ -79,18 +80,20 @@ export default function Attendances({
       ],
     },
     {
+      className: "w-[252px]",
       subRows: [
         {
           title: {
             label: "fullName",
             value: "name",
           },
-          [SortType.DESC]: () => handleSortName(SortType.DESC),
-          [SortType.ASC]: () => handleSortName(SortType.ASC),
+          [SortType.DESC]: () => {},
+          [SortType.ASC]: () => {},
         },
       ],
     },
     {
+      className: "w-[100px]",
       subRows: [
         {
           title: {
@@ -104,55 +107,6 @@ export default function Attendances({
       ],
     },
     {
-      subRows: [
-        {
-          title: {
-            label: "totalPoints",
-            value: "totalExtra",
-          },
-          [SortType.DESC]: () => handleSortPointTotal(SortType.DESC),
-          [SortType.ASC]: () => handleSortPointTotal(SortType.ASC),
-        },
-      ],
-    },
-    {
-      subRows: [
-        {
-          title: {
-            label: "thisMonth",
-            value: "monthExtraAndMinus",
-          },
-          [SortType.DESC]: () => handleSortTotal(SortType.DESC, "monthPoint"),
-          [SortType.ASC]: () => handleSortTotal(SortType.ASC, "monthPoint"),
-        },
-      ],
-    },
-    {
-      subRows: [
-        {
-          title: {
-            label: "thisWeek",
-            value: "weekExtraAndMinus",
-          },
-          [SortType.DESC]: () => handleSortTotal(SortType.DESC, "weekPoint"),
-          [SortType.ASC]: () => handleSortTotal(SortType.ASC, "weekPoint"),
-        },
-      ],
-    },
-    {
-      subRows: [
-        {
-          title: {
-            label: "today",
-            value: "dayExtraAndMinus",
-          },
-          [SortType.DESC]: () => handleSortTotal(SortType.DESC, "dayPoint"),
-          [SortType.ASC]: () => handleSortTotal(SortType.ASC, "dayPoint"),
-        },
-      ],
-    },
-    {
-      className: "w-[252px]",
       subRows: [
         {
           title: {
@@ -284,56 +238,6 @@ export default function Attendances({
     []
   );
 
-  const handleSortPointTotal = (type: `${SortType}`) => {
-    const newStudents = [...students];
-    newStudents.sort((a, b) => {
-      const totalA = +a.point.extraPoint - +a.point.minusPoint;
-      const totalB = +b.point.extraPoint - +b.point.minusPoint;
-      return type === SortType.ASC ? totalB - totalA : totalA - totalB;
-    });
-    setStudents(newStudents);
-  };
-
-  const handleSortName = (type: `${SortType}`) => {
-    const newStudents = [...students];
-    newStudents.sort((a, b) => {
-      return type === SortType.ASC
-        ? a.nickname.localeCompare(b.nickname)
-        : b.nickname.localeCompare(a.nickname);
-    });
-    setStudents(newStudents);
-  };
-
-  const handleSortTotal = (
-    type: `${SortType}`,
-    field: "monthPoint" | "weekPoint" | "dayPoint"
-  ) => {
-    const newStudents = [...students];
-    newStudents.sort((a, b) => {
-      const totalA = +a[field].extra - +a[field].minus;
-      const totalB = +b[field].extra - +b[field].minus;
-      return type === SortType.ASC ? totalB - totalA : totalA - totalB;
-    });
-    setStudents(newStudents);
-  };
-
-  const top3Point = useMemo(() => {
-    const newStudents = students;
-    const top3Students = newStudents
-      .sort((a, b) => {
-        const totalA = +a.point.extraPoint - +a.point.minusPoint;
-        const totalB = +b.point.extraPoint - +b.point.minusPoint;
-        return totalB - totalA;
-      })
-      .slice(0, 3)
-      .map((student) => student.id);
-    return {
-      [top3Students[0]]: "1",
-      [top3Students[1]]: "2",
-      [top3Students[2]]: "3",
-    };
-  }, []);
-
   const handleToggleAttendanceAll = () => {
     if (!isToday(searchParams || new Date())) return;
 
@@ -379,17 +283,6 @@ export default function Attendances({
 
   return (
     <>
-      {dataModal && (
-        <EditStudentModal
-          modal={modal}
-          toggle={toggleEdit}
-          initValue={dataModal}
-          onReFetchList={handleReFetchList}
-          handleRemoveStudent={handleRemoveStudent}
-          isPermission={isPermission}
-          enableRemove
-        />
-      )}
       <div className="space-y-5 pb-5  min-h-[calc(100vh-310px)]">
         <div className="flex gap-4 justify-between items-center">
           <BackTitle url={`/workspace/class/${classData.id}`}>
@@ -448,7 +341,6 @@ export default function Attendances({
                     isDisableAttendance={!isToday(searchParams || new Date())}
                     onChangeStudent={handleAttendanceStudent}
                     classId={classData.id}
-                    rank={top3Point[x.id] as "1" | "2" | "3"}
                     onToggleComment={toggle}
                     handleActiveStudentComment={handleActiveStudentComment}
                     handleEdit={handleEdit}

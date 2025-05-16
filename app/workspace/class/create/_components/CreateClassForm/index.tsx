@@ -49,161 +49,6 @@ import { v4 as uuidv4 } from "uuid";
 import * as XLSX from "xlsx";
 import { z } from "zod";
 
-const genders = [1, 0];
-
-const GenderItem = ({
-  value,
-  onChange,
-  index,
-}: {
-  value: boolean;
-  onChange: ({ index, value }: { index: number; value: boolean }) => void;
-  index: number;
-}) => {
-  const tCommon = useTranslations("common");
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button className="flex items-center  gap-2">
-          <span className="min-w-[36px] text-left">
-            {value ? tCommon("male") : tCommon("female")}
-          </span>
-          <FontAwesomeIcon icon={faAngleDown} className="" />
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[92px] rounded-lg">
-        {genders.map((item) => (
-          <DropdownMenuItem
-            key={item}
-            onClick={() => onChange({ index, value: !!item })}
-            className="cursor-pointer"
-          >
-            <DropdownMenuLabel>
-              {item ? tCommon("male") : tCommon("female")}
-            </DropdownMenuLabel>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-};
-
-const NormalAddListStudents = ({
-  onAddStudents,
-  students,
-}: {
-  onAddStudents: (st: Array<StudentType>) => void;
-  students: Array<StudentType>;
-}) => {
-  const t = useTranslations("class");
-  const tCommon = useTranslations("common");
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const handleAddList = () => {
-    if (textAreaRef.current) {
-      const newStudents = textAreaRef.current.value;
-      if (!newStudents) return;
-      const splitValues: Array<StudentType> = newStudents
-        .split("\n")
-        .filter((item: string) => item.trim())
-        .map((item: string) => ({
-          fullName: item,
-          gender: true,
-        }));
-      onAddStudents([...students, ...splitValues]);
-      textAreaRef.current.value = "";
-    }
-  };
-
-  const handleChangeGender = ({
-    index,
-    value,
-  }: {
-    index: number;
-    value: boolean;
-  }) => {
-    const newStudents = [...students];
-    const studentNeedChange = newStudents[index - 1];
-    studentNeedChange.gender = value;
-    onAddStudents(newStudents);
-  };
-
-  const handleRemove = (index: number) => {
-    const newStudents = [...students];
-    newStudents.splice(index - 1, 1);
-    onAddStudents(newStudents);
-  };
-
-  return (
-    <>
-      <div className="flex gap-8">
-        <div className="flex-1 relative h-[292px]">
-          <Textarea
-            className="text-lg h-full pb-[66px]"
-            placeholder={t("enterStudentName")}
-            ref={textAreaRef}
-          />
-          <div className="absolute bottom-[1px] left-[1px] px-[10px] right-[1px] text-center bg-white rounded-sm">
-            <div className="border-t py-[10px]">
-              <a
-                className="border border-primary rounded-full text-primary p-4 py-2 inline-block cursor-pointer"
-                onClick={handleAddList}
-              >
-                {t("listAddition")}
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-2 flex-1">
-          {!!students.length && (
-            <div className="border rounded-lg overflow-hidden">
-              <table className="w-full">
-                <thead className="bg-primary text-white">
-                  <tr>
-                    <th className="p-2 w-[60px] text-center">
-                      {tCommon("order")}
-                    </th>
-                    <th className="p-2">{tCommon("nameStudent")}</th>
-                    <th className="p-2 w-[120px]">{tCommon("gender")}</th>
-                    <th className="p-2 w-[60px]"></th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white">
-                  {students.map((st, index) => (
-                    <tr
-                      key={uuidv4()}
-                      className="[&:not(:last-child)]:border-b"
-                    >
-                      <td className="p-2 text-center">{index + 1}</td>
-                      <td className="p-2">{st.fullName}</td>
-                      <td className="p-2">
-                        <GenderItem
-                          value={st.gender}
-                          index={index + 1}
-                          onChange={handleChangeGender}
-                        />
-                      </td>
-                      <td className="p-2 text-center">
-                        <button
-                          className="p-0 py-2"
-                          onClick={() => handleRemove(index + 1)}
-                        >
-                          <img src="/images/remove.svg" alt="remove" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      </div>
-    </>
-  );
-};
-
 type StudentTableType = {
   head: Array<string>;
   body: Array<Array<string>>;
@@ -323,12 +168,12 @@ const ExcelAddListStudents = ({
     <div className="space-y-4 text-center">
       <div className="flex gap-8">
         <div className="flex-1 space-y-4 bg-[#FAFAFA] rounded-xl p-5 px-3">
-          <div className="relative">
+          <div className="relative flex justify-between">
             <label
               htmlFor="fileInput"
-              className="cursor-pointer text-primary bg-white border border-primary p-2 px-4 rounded-full text-lg inline-block"
+              className="cursor-pointer text-primary underline   text-base inline-block"
             >
-              {t("selectFileXlsx")}
+              thêm học sinh bằng Excel
             </label>
             <Input
               type="file"
@@ -352,7 +197,6 @@ const ExcelAddListStudents = ({
             </p>
           )}
         </div>
-        <div className="flex-1" />
       </div>
 
       {!!studentTable?.body.length && (
@@ -409,45 +253,10 @@ const AddListStudents = ({
   const t = useTranslations("class");
 
   return (
-    <>
-      <div className="space-y-4 relative flex gap-8">
-        <div className="flex-1 flex justify-between">
-          <label className="font-medium">
-            {t("studentList")}
-            <span className="text-[#F4673D] mb-1 ml-1 text-sm">
-              * {t("oneNamePerLine")}
-            </span>
-          </label>
-
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="isEditInfo"
-              className="w-6 h-6 bg-slate-300 border-0"
-              onClick={toggleGetDataFromExcel}
-              checked={isGetDataFromExcel}
-            />
-            <label
-              htmlFor="isEditInfo"
-              className="font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-            >
-              {t("getExcel")}
-            </label>
-          </div>
-        </div>
-        <div className="flex-1" />
-      </div>
-      {isGetDataFromExcel ? (
-        <ExcelAddListStudents
-          onChangeFileUpload={onChangeFileUpload}
-          setStudentsExcel={setStudentsExcel}
-        />
-      ) : (
-        <NormalAddListStudents
-          onAddStudents={onAddStudents}
-          students={students}
-        />
-      )}
-    </>
+    <ExcelAddListStudents
+      onChangeFileUpload={onChangeFileUpload}
+      setStudentsExcel={setStudentsExcel}
+    />
   );
 };
 
@@ -463,12 +272,11 @@ export default function CreateClassForm() {
 
   const [students, setStudents] = useState<StudentType[]>([]);
   const [studentsExcel, setStudentsExcel] = useState<any[]>([]);
-  console.log("students", students);
   const [ListSubject, setListSubject] = useState<
     { label: string; value: string }[]
   >([]);
   const [errorMessage, setErrorMessage] = useState("");
-  const [isGetDataFromExcel, setIsGetDataFromExcel] = useState(false);
+  const [isGetDataFromExcel, setIsGetDataFromExcel] = useState(true);
   const [selectedFile, setSelectedFile] = useState<File>();
   const router = useRouter();
   const { toast } = useToast();
@@ -504,7 +312,6 @@ export default function CreateClassForm() {
         message: tCommon("invalidInput"),
       }),
     subjects: z.array(z.string()),
-    seasonName: z.string().min(1, { message: t("enterClassCourse") }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -513,7 +320,6 @@ export default function CreateClassForm() {
       name: "",
       fullName: "",
       subjects: [],
-      seasonName: "",
       seasonDuration: {
         start: undefined,
         end: undefined,
@@ -544,6 +350,7 @@ export default function CreateClassForm() {
     )} - ${format(seasonDuration.end || "", "MM/yyyy")}`;
     const res = await mutationCreateClassNormal.mutateAsync({
       ...values,
+      seasonName: "Khóa Chính",
       seasonDuration: formattedSeasonDuration,
       students: isGetDataFromExcel ? studentEx : students,
     });
@@ -588,9 +395,7 @@ export default function CreateClassForm() {
           <InputWithLabel
             fieldTitle={`${t(
               "className"
-            )} <span class="text-[#F4673D] mb-1 text-sm">* ${t(
-              "shortNameExample"
-            )} </span>`}
+            )} <span class="text-[#F4673D] mb-1 text-sm">*</span>`}
             nameInSchema="name"
             placeholder={`${t("className")}`}
             className="flex-1"
@@ -598,79 +403,66 @@ export default function CreateClassForm() {
           <InputWithLabel
             fieldTitle={`${t(
               "fullClassName"
-            )} <span class="text-[#F4673D] mb-1 text-sm">${t(
-              "shortFullNameExample"
-            )}</span>`}
+            )} <span class="text-[#F4673D] mb-1 text-sm"></span>`}
             nameInSchema="fullName"
             placeholder={t("fullClassName")}
             className="flex-1"
           />
         </div>
         <div className="flex gap-8">
-          <div className="flex gap-[12px]   flex-1">
-            <InputWithLabel
-              fieldTitle={`${t(
-                "course"
-              )} <span class="text-[#F4673D] mb-1 text-sm">*</span>`}
-              nameInSchema="seasonName"
-              placeholder={`${t("nameCourse")}`}
-              className="flex-1"
-            />
-
-            <FormField
-              control={form.control}
-              name="seasonDuration"
-              render={({ field }) => (
-                <FormItem className="flex flex-col flex-1">
-                  <FormLabel className="text-base font-medium capitalize">
-                    {tCommon("classTerm")}
-                    <span className="text-[#F4673D] mb-1 text-sm"> *</span>
-                  </FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "text-left font-normal flex items-center justify-between h-[50px] text-[16px] border-input text-foreground",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value?.start && field.value?.end ? (
-                            `${format(field.value.start, "MM/yyyy")} - ${format(
-                              field.value.end,
-                              "MM/yyyy"
-                            )}`
-                          ) : (
-                            <span className="capitalize text-[#B5B7C0]">
-                              {tCommon("selectClassTerm")}
-                            </span>
-                          )}
-                          <CalendarDaysIcon className="h-5 w-5 text-[#B5B7C0]" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <MonthRangePicker
-                        onMonthRangeSelect={(newDates) =>
-                          form.setValue("seasonDuration", newDates)
-                        }
-                        selectedMonthRange={
-                          field.value.start && field.value.end
-                            ? {
-                                start: field.value.start as Date,
-                                end: field.value.end as Date,
-                              }
-                            : undefined
-                        }
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="seasonDuration"
+            render={({ field }) => (
+              <FormItem className="flex flex-col flex-1">
+                <FormLabel className="text-base font-medium capitalize">
+                  {tCommon("classTerm")}
+                  <span className="text-[#F4673D] mb-1 text-sm"> *</span>
+                </FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "text-left font-normal flex items-center justify-between h-[50px] text-[16px] border-input text-foreground",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value?.start && field.value?.end ? (
+                          `${format(field.value.start, "MM/yyyy")} - ${format(
+                            field.value.end,
+                            "MM/yyyy"
+                          )}`
+                        ) : (
+                          <span className="capitalize text-[#B5B7C0]">
+                            {tCommon("selectClassTerm")}
+                          </span>
+                        )}
+                        <CalendarDaysIcon className="h-5 w-5 text-[#B5B7C0]" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <MonthRangePicker
+                      onMonthRangeSelect={(newDates) =>
+                        form.setValue("seasonDuration", newDates)
+                      }
+                      selectedMonthRange={
+                        field.value.start && field.value.end
+                          ? {
+                              start: field.value.start as Date,
+                              end: field.value.end as Date,
+                            }
+                          : undefined
+                      }
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="subjects"

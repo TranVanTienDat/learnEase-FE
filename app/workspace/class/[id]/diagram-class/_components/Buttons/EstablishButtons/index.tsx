@@ -146,7 +146,6 @@ export default function EstablishButtons({
           {t("deleteLastColumn")}
         </Button>
       </div>
-      <span className="text-base text-[#444444]">{t("instructions")}</span>
     </div>
   );
 }

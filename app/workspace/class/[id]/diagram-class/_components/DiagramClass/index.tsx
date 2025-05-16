@@ -154,30 +154,12 @@ export default function DiagramClass({ data }: { data: DetailClassType }) {
         listStudent={listStudent}
         handleDragStart={handleDragStart}
       />
-      {isOnChangeBoard === "Above" && (
-        <ChangeBoardButton
-          isOnChangeBoard={isOnChangeBoard}
-          classroomLayoutId={data.classroomLayout?.id}
-          classId={data.id}
-          setIsOnChangeBoard={setIsOnChangeBoard}
-          action={"Below"}
-        />
-      )}
+      <hr className="my-7 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-25 dark:via-neutral-400" />
       <StudentTable
         tableData={tableData}
         handleDrop={handleDrop}
         handleDragStart={handleDragStart}
       />
-      {isOnChangeBoard === "Below" && (
-        <ChangeBoardButton
-          action={"Above"}
-          isOnChangeBoard={isOnChangeBoard}
-          classroomLayoutId={data.classroomLayout?.id}
-          classId={data.id}
-          setIsOnChangeBoard={setIsOnChangeBoard}
-        />
-      )}
-
       <EstablishButtons
         tableData={tableData}
         classroomLayoutId={data.classroomLayout?.id}
