@@ -1,12 +1,26 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useChatStore } from "@/stores/chat";
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 
 const BoxInput = () => {
   const { onUserInput } = useChatStore((state) => state);
 
   const [messageInput, setMessageInput] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const adjustTextareaHeight = useCallback(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "auto";
+      const height = textarea.scrollHeight;
+      textarea.style.height = height > 100 ? `${100}px` : `${height}px`;
+    }
+  }, []);
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [messageInput, adjustTextareaHeight]);
 
   const handleSubmit = useCallback(() => {
     if (messageInput.trim() === "") return;
@@ -35,18 +49,18 @@ const BoxInput = () => {
     },
     [handleSubmit]
   );
-
   return (
     <div className="w-full absolute bottom-[84px] px-4">
       <div className="max-w-[768px] mx-auto ">
         <div className="flex justify-center p-2.5 rounded-xl shadow-md bg-white">
           <textarea
+            ref={textareaRef}
             rows={1}
             value={messageInput}
             onChange={(e) => setMessageInput(e.target.value)}
             onKeyDown={handleKeyDown}
             className="block p-1 w-full text-sm text-gray-900
-            focus-visible:outline-none resize-none"
+            focus-visible:outline-none resize-none table-wrapper"
             placeholder="Write your thoughts here..."
           ></textarea>
 
