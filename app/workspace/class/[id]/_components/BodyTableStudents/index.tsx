@@ -155,7 +155,7 @@ export default function BodyTableStudents({
                         className="cursor-pointer"
                         onClick={() => handleEdit(item)}
                       />
-                      <RemoveClassModal
+                      {/* <RemoveClassModal
                         onRemove={() => handleRemoveStudent(item.id.toString())}
                         isPermission={isPermission}
                         handleOpenComfirm={() => handleComfirm()}
@@ -168,7 +168,7 @@ export default function BodyTableStudents({
                             hanging={18}
                           />
                         }
-                      />
+                      /> */}
                     </div>
                   </td>
                 </tr>
